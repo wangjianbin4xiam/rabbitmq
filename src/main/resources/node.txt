@@ -1,0 +1,24 @@
+1、RabbitMQ消息模式的核心理念
+生产者没有直接发送任何消费到队列。实际上，生产者都不知道这个消费是发送给哪个队列的。
+相反，生产者只能发送消息给转发器，转发器是非常简单的。一方面它接受生产者的消息，另一方面向队列推送消息
+
+2、转发器的类型
+Direct、Topic、Headers和Fanout
+
+3、声明一个转化器
+channel.exchangeDeclare(EXCHANGE_NAME, "fanout");
+
+
+========================
+路由选择
+绑定：绑定表示转换器与队列之间的关系。可以简单的认为：队列对该转发器上的消息感兴趣
+channel.queueBind(queueName, EXCHANGE_NAME, routingKey);
+
+routingKey：绑定键
+绑定键关键取决于转换器的类型。对于fanout类型，忽略此参数
+
+1、Direct exchange（直接转发）
+消息会被推送至绑定键（binding key）和消息发布附带的选择键（routing key）完全匹配的队列。
+
+2、Topic exchange（主题转发器）
+发送给主题转发器的消息不能是任意设置的选择键，必须是用小数点隔开的一系列的标识符

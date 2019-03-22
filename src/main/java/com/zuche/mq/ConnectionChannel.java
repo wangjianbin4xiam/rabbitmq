@@ -19,6 +19,7 @@ public abstract class ConnectionChannel {
     protected static final String HOST = "127.0.0.1";
     protected static final String USER = "guest";
     protected static final String PASSWORD = "guest";
+    protected static final int PORT = 5672;
 
     /**
      * 连接
@@ -40,7 +41,7 @@ public abstract class ConnectionChannel {
     public ConnectionChannel() {
     }
 
-    public ConnectionChannel(String routingKey) throws IOException, TimeoutException {
+    public ConnectionChannel(String routingKey,String exchangeType,String exchangeName) throws IOException, TimeoutException {
         this.routingKey = routingKey;
 
         // 创建一个连接工厂
@@ -50,8 +51,8 @@ public abstract class ConnectionChannel {
         factory.setUsername(USER);
         factory.setPassword(PASSWORD);
         //默认端口
-        factory.setPort(5672);
-        factory.setVirtualHost("/");
+        factory.setPort(PORT);
+       // factory.setVirtualHost("/");
 
         // 声明一个连接
         this.connection = factory.newConnection();
@@ -63,9 +64,10 @@ public abstract class ConnectionChannel {
          * 参数1：交换机名称
          * 参数2：交换机类型
          * 参数3：交换机持久性，如果为true则服务器重启时不会丢失
-         * 参数4：交换机在不被使用时是否删除 参数5：交换机的其他属性
+         * 参数4：交换机在不被使用时是否删除
+         * 参数5：交换机的其他属性
          */
-        this.channel.exchangeDeclare(EXCHANGE_NAME,"topic",false,false,null);
+        this.channel.exchangeDeclare(exchangeName,exchangeType);
     }
 
     public void close() throws IOException, TimeoutException {
